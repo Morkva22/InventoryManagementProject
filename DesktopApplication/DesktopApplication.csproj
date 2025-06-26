@@ -11,6 +11,24 @@
     <ItemGroup>
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+      <PackageReference Include="Supabase" Version="1.1.1" />
+      <PackageReference Include="Supabase.Postgrest" Version="4.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="scr\Views\Home.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="scr\Views\ProductsUserControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="scr\Views\MainMenuControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
     </ItemGroup>
 
 </Project>
