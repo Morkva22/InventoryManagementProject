@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DesktopApplication.ViewModels;
+using DesktopApplication.Views;
 
 namespace DesktopApplication;
 
@@ -19,5 +21,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        Content = new HomeUserControl(new HomeViewModels());
     }
 }
