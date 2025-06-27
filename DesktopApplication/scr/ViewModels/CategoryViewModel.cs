@@ -1,3 +1,4 @@
+// CategoryViewModel.cs - исправленный
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,7 +10,7 @@ namespace DesktopApplication.ViewModels
 {
     public class CategoryViewModel
     {
-        private readonly ISupaRepository _repository;
+        private readonly SupabaseClientService _repository;
 
         public ObservableCollection<CategoryModel> Categories { get; } = new();
         public CategoryModel SelectedCategory { get; set; }
@@ -19,7 +20,7 @@ namespace DesktopApplication.ViewModels
         public ICommand UpdateCategoryCommand { get; }
         public ICommand DeleteCategoryCommand { get; }
 
-        public CategoryViewModel(ISupaRepository repository)
+        public CategoryViewModel(SupabaseClientService repository)
         {
             _repository = repository;
             

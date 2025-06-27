@@ -1,3 +1,4 @@
+// SupplierViewModel.cs - исправленный
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,7 +10,7 @@ namespace DesktopApplication.ViewModels
 {
     public class SupplierViewModel
     {
-        private readonly ISupaRepository _repository;
+        private readonly ISupabaseClientService _repository;
 
         public ObservableCollection<SupplierModel> Suppliers { get; } = new();
         public SupplierModel SelectedSupplier { get; set; }
@@ -19,7 +20,7 @@ namespace DesktopApplication.ViewModels
         public ICommand UpdateSupplierCommand { get; }
         public ICommand DeleteSupplierCommand { get; }
 
-        public SupplierViewModel(ISupaRepository repository)
+        public SupplierViewModel(ISupabaseClientService repository)
         {
             _repository = repository;
             

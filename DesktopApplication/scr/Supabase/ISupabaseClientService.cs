@@ -4,7 +4,7 @@ using ManagementSystem;
 
 namespace DesktopApplication.Services
 {
-    public interface ISupaRepository
+    public interface ISupabaseClientService
     {
         // Products
         Task<IEnumerable<ProductModel>> GetAllProducts();

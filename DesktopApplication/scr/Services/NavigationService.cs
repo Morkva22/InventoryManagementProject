@@ -1,35 +1,44 @@
+using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DesktopApplication.Services
 {
     public class NavigationService : INavigationService
     {
-        private readonly ContentControl _contentControl;
-        private readonly Dictionary<string, UserControl> _views = new Dictionary<string, UserControl>();
+        private readonly IServiceProvider _serviceProvider;
+        private readonly Dictionary<string, Type> _viewRegistry = new();
+        private ContentControl _contentControl;
 
-        public NavigationService(ContentControl contentControl)
+        public NavigationService(IServiceProvider serviceProvider)
         {
-            _contentControl = contentControl;
+            _serviceProvider = serviceProvider;
+        }
+
+        public void SetContentControl(ContentControl contentControl)
+        {
+            _contentControl = contentControl ?? throw new ArgumentNullException(nameof(contentControl));
+        }
+
+        public void RegisterView<TView>(string viewName) where TView : UserControl
+        {
+            _viewRegistry[viewName] = typeof(TView);
         }
 
         public void NavigateTo(string viewName)
         {
-            if (_views.ContainsKey(viewName))
-            {
-                _contentControl.Content = _views[viewName];
-            }
-        }
+            if (_contentControl == null)
+                throw new InvalidOperationException("ContentControl is not set. Call SetContentControl first.");
 
-        public void RegisterView(string viewName, UserControl view)
-        {
-            if (!_views.ContainsKey(viewName))
+            if (_viewRegistry.TryGetValue(viewName, out var viewType))
             {
-                _views.Add(viewName, view);
+                var view = (UserControl)_serviceProvider.GetService(viewType);
+                _contentControl.Content = view;
             }
             else
             {
-                _views[viewName] = view;
+                throw new KeyNotFoundException($"View '{viewName}' is not registered");
             }
         }
     }

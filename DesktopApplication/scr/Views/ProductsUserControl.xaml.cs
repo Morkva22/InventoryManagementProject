@@ -1,5 +1,6 @@
-using System.Windows.Controls;
 using DesktopApplication.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Controls;
 
 namespace DesktopApplication.Views
 {
@@ -7,11 +8,8 @@ namespace DesktopApplication.Views
     {
         public ProductsUserControl(ProductViewModel viewModel)
         {
-            InitializeComponent();
             DataContext = viewModel;
-
-            // Загрузить продукты при инициализации
-            viewModel.LoadProductsCommand.Execute(null);
+            InitializeComponent();
         }
     }
 }

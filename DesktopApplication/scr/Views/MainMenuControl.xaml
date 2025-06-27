@@ -1,9 +1,9 @@
 <UserControl x:Class="DesktopApplication.Views.MainMenuControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
     
     <Grid Background="{StaticResource BackgroundLightBrush}">
@@ -15,14 +15,18 @@
         <!-- Панель навигации -->
         <Border Grid.Row="0" Background="{StaticResource BackgroundDarkBrush}" Padding="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="btnProducts" Content="Продукты" 
-                        Width="120" Click="btnProducts_Click" FontWeight="SemiBold"/>
-                <Button x:Name="btnCategories" Content="Категории" 
-                        Width="120" Click="btnCategories_Click" FontWeight="SemiBold"/>
-                <Button x:Name="btnSuppliers" Content="Поставщики" 
-                        Width="120" Click="btnSuppliers_Click" FontWeight="SemiBold"/>
-                <Button x:Name="btnReports" Content="Отчеты" 
-                        Width="120" Click="btnReports_Click" FontWeight="SemiBold"/>
+                <Button x:Name="BtnProducts" Content="Продукты" 
+                        Style="{StaticResource PrimaryButton}"
+                        Width="120" Click="btnProducts_Click"/>
+                <Button x:Name="BtnCategories" Content="Категории" 
+                        Style="{StaticResource PrimaryButton}"
+                        Width="120" Click="btnCategories_Click"/>
+                <Button x:Name="BtnSuppliers" Content="Поставщики" 
+                        Style="{StaticResource PrimaryButton}"
+                        Width="120" Click="btnSuppliers_Click"/>
+                <Button x:Name="BtnReports" Content="Отчеты" 
+                        Style="{StaticResource PrimaryButton}"
+                        Width="120" Click="btnReports_Click"/>
             </StackPanel>
         </Border>
 

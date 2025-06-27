@@ -1,23 +1,47 @@
-namespace ManagementSystem;
-
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
 
-[Table("suppliers")]
-public class SupplierModel : BaseModel
+namespace ManagementSystem
 {
-    [PrimaryKey("id")]
-    public int Id { get; set; }
-    
-    [Column("name")]
-    public string Name { get; set; }
-    
-    [Column("contact_person")]
-    public string ContactPerson { get; set; }
-    
-    [Column("phone")]
-    public string Phone { get; set; }
-    
-    [Column("email")]
-    public string Email { get; set; }
+    [Table("suppliers")]
+    public class SupplierModel : BaseModel
+    {
+        [PrimaryKey("Id", true)]
+        public int Id { get; set; }
+
+        [Column("Name")]
+        public string Name { get; set; }
+
+        [Column("ContactPerson")]
+        public string ContactPerson { get; set; }
+
+        [Column("Phone")]
+        public string Phone { get; set; }
+
+        [Column("Email")]
+        public string Email { get; set; }
+
+        public SupplierModel Clone()
+        {
+            return new SupplierModel
+            {
+                Id = this.Id,
+                Name = this.Name,
+                ContactPerson = this.ContactPerson,
+                Phone = this.Phone,
+                Email = this.Email
+            };
+        }
+
+        public static SupplierModel CreateDefault()
+        {
+            return new SupplierModel 
+            { 
+                Name = "New Supplier",
+                ContactPerson = "",
+                Phone = "",
+                Email = ""
+            };
+        }
+    }
 }

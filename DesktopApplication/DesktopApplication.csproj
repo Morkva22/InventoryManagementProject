@@ -10,9 +10,13 @@
 
     <ItemGroup>
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="DotNetEnv" Version="3.1.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+      <PackageReference Include="realtime-csharp" Version="6.0.4" />
       <PackageReference Include="Supabase" Version="1.1.1" />
+      <PackageReference Include="Supabase.Gotrue" Version="6.0.3" />
       <PackageReference Include="Supabase.Postgrest" Version="4.1.0" />
+      <PackageReference Include="Supabase.Storage" Version="2.0.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +29,21 @@
         <SubType>Designer</SubType>
       </Page>
       <Page Update="scr\Views\MainMenuControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="scr\Views\ProductEditWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="scr\Views\SupplierEditWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="scr\Views\CategoryEditWindow.xaml">
         <Generator>MSBuild:Compile</Generator>
         <XamlRuntime>Wpf</XamlRuntime>
         <SubType>Designer</SubType>

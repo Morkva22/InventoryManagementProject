@@ -1,23 +1,36 @@
-namespace ManagementSystem;
-
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
 
-[Table("inventory")]
-public class InventoryModel : BaseModel
+namespace ManagementSystem
 {
-    [PrimaryKey("inventory_id")]
-    public int Id { get; set; }
-    
-    [Column("product_id")]
-    public int ProductId { get; set; }
-    
-    [Column("quantity")]
-    public int Quantity { get; set; }
-    
-    [Column("min_stock")]
-    public int MinStock { get; set; }
-    
-    [Column("last_updated")]
-    public DateTime LastUpdated { get; set; }
+    [Table("inventory")]
+    public class InventoryModel : BaseModel
+    {
+        [PrimaryKey("InventoryID", true)]
+        public int Id { get; set; }
+
+        [Column("ProductID")]
+        public int ProductId { get; set; }
+
+        [Column("Quantity")]
+        public int Quantity { get; set; }
+
+        [Column("LastUpdated")]
+        public DateTime LastUpdated { get; set; }
+
+        [Column("MinStock")]
+        public int MinStock { get; set; }
+
+        public InventoryModel Clone()
+        {
+            return new InventoryModel
+            {
+                Id = this.Id,
+                ProductId = this.ProductId,
+                Quantity = this.Quantity,
+                LastUpdated = this.LastUpdated,
+                MinStock = this.MinStock
+            };
+        }
+    }
 }

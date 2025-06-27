@@ -1,42 +1,47 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 using System.Windows.Controls;
+using DesktopApplication.Services;
 using DesktopApplication.Views;
-using ManagementSystem;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DesktopApplication
 {
     public partial class MainWindow : Window
     {
-        private readonly ISupabaseRepository _repository;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly INavigationService _navigationService;
 
-        public MainWindow()
+        public MainWindow(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
+            _navigationService = serviceProvider.GetRequiredService<INavigationService>();
+            
             InitializeComponent();
-
-            // Инициализация сервисов
-            var serviceProvider = ConfigureServices();
-            _repository = serviceProvider.GetRequiredService<ISupabaseRepository>();
-
-            // Инициализация Supabase
-            _repository.InitDatabase().GetAwaiter().GetResult();
-
-            // Добавление главного меню
-            var mainMenu = new MainMenuControl(_repository);
-            ((Grid)Content).Children.Add(mainMenu);
+            Loaded += OnWindowLoaded;
         }
 
-        private ServiceProvider ConfigureServices()
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            var services = new ServiceCollection();
+            var mainMenu = _serviceProvider.GetRequiredService<MainMenuControl>();
+            MainContainer.Children.Add(mainMenu);
+            
+            // Находим ContentControl в MainMenu
+            if (mainMenu.FindName("MainContent") is ContentControl contentControl)
+            {
+                _navigationService.SetContentControl(contentControl);
+            }
+            else
+            {
+                MessageBox.Show("Ошибка инициализации интерфейса", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+            }
+        }
 
-            // Регистрация сервисов
-            services.AddSingleton<ISupabaseRepository>(sp =>
-                new SupabaseRepository(
-                    
-
-
-            return services.BuildServiceProvider();
+        protected override void OnClosed(EventArgs e)
+        {
+            Loaded -= OnWindowLoaded;
+            base.OnClosed(e);
         }
     }
 }

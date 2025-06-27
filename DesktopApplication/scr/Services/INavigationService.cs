@@ -5,6 +5,7 @@ namespace DesktopApplication.Services
     public interface INavigationService
     {
         void NavigateTo(string viewName);
-        void RegisterView(string viewName, UserControl view);
+        void RegisterView<TView>(string viewName) where TView : UserControl;
+        void SetContentControl(ContentControl contentControl);
     }
 }

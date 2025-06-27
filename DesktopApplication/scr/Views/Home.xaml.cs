@@ -5,7 +5,7 @@ namespace DesktopApplication.Views;
 
 public partial class HomeUserControl : UserControl
 {
-    public HomeUserControl(HomeViewModels viewModel)
+    public HomeUserControl(HomeViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

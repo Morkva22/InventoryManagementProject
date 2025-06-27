@@ -1,3 +1,4 @@
+// InventoryViewModel.cs - исправленный
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,7 +10,7 @@ namespace DesktopApplication.ViewModels
 {
     public class InventoryViewModel
     {
-        private readonly ISupaRepository _repository;
+        private readonly ISupabaseClientService _repository;
 
         public ObservableCollection<InventoryModel> Inventory { get; } = new();
         public InventoryModel SelectedItem { get; set; }
@@ -17,7 +18,7 @@ namespace DesktopApplication.ViewModels
         public ICommand LoadInventoryCommand { get; }
         public ICommand UpdateInventoryCommand { get; }
 
-        public InventoryViewModel(ISupaRepository repository)
+        public InventoryViewModel(ISupabaseClientService repository)
         {
             _repository = repository;
             

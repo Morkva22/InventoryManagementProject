@@ -7,7 +7,7 @@ using Supabase;
 
 namespace DesktopApplication.Services
 {
-    public class SupabaseRepository : ISupaRepository
+    public class SupabaseRepository : ISupabaseClientService
     {
         private readonly Supabase.Client _supabase;
 
@@ -36,11 +36,11 @@ namespace DesktopApplication.Services
         {
             await _supabase
                 .From<ProductModel>()
-                .Where(x => x.id == product.id)
+                .Where(x => x.Id == product.Id)
                 .Set(x => x.Name, product.Name)
                 .Set(x => x.Description, product.Description)
-                .Set(x => x.CategoryID, product.CategoryID)
-                .Set(x => x.SupplierID, product.SupplierID)
+                .Set(x => x.CategoryId, product.CategoryId)
+                .Set(x => x.SupplierId, product.SupplierId)
                 .Set(x => x.PurchasePrice, product.PurchasePrice)
                 .Set(x => x.SellingPrice, product.SellingPrice)
                 .Update();
@@ -50,7 +50,7 @@ namespace DesktopApplication.Services
         {
             await _supabase
                 .From<ProductModel>()
-                .Where(x => x.id == id)
+                .Where(x => x.Id == id)
                 .Delete();
         }
         #endregion
