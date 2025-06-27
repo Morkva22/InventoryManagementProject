@@ -33,7 +33,8 @@ namespace DesktopApplication
             // Регистрация сервисов
             services.AddSingleton<ISupabaseRepository>(sp =>
                 new SupabaseRepository(
-          
+                    
+
 
             return services.BuildServiceProvider();
         }
