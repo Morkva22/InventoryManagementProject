@@ -4,26 +4,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             d:DesignHeight="600" d:DesignWidth="1000">
+    
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхнее меню -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#2c3e50">
-            <Button x:Name="btnProducts" Content="Продукты" Width="100" Height="40" Margin="5"
-                    Click="btnProducts_Click" Background="#3498db" Foreground="White" />
-            <Button x:Name="btnCategories" Content="Категории" Width="100" Height="40" Margin="5"
-                    Click="btnCategories_Click" Background="#3498db" Foreground="White" />
-            <Button x:Name="btnSuppliers" Content="Поставщики" Width="100" Height="40" Margin="5"
-                    Click="btnSuppliers_Click" Background="#3498db" Foreground="White" />
-            <Button x:Name="btnReports" Content="Отчеты" Width="100" Height="40" Margin="5"
-                    Click="btnReports_Click" Background="#3498db" Foreground="White" />
-        </StackPanel>
+        <!-- Панель навигации -->
+        <Border Grid.Row="0" Background="{StaticResource BackgroundDarkBrush}" Padding="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="btnProducts" Content="Продукты" 
+                        Width="120" Click="btnProducts_Click" FontWeight="SemiBold"/>
+                <Button x:Name="btnCategories" Content="Категории" 
+                        Width="120" Click="btnCategories_Click" FontWeight="SemiBold"/>
+                <Button x:Name="btnSuppliers" Content="Поставщики" 
+                        Width="120" Click="btnSuppliers_Click" FontWeight="SemiBold"/>
+                <Button x:Name="btnReports" Content="Отчеты" 
+                        Width="120" Click="btnReports_Click" FontWeight="SemiBold"/>
+            </StackPanel>
+        </Border>
 
-        <!-- Контейнер для содержимого -->
-        <ContentControl x:Name="MainContent" Grid.Row="1" Margin="10" />
+        <!-- Контейнер контента -->
+        <Border Grid.Row="1" Style="{StaticResource MainContainerStyle}">
+            <ContentControl x:Name="MainContent"/>
+        </Border>
     </Grid>
 </UserControl>

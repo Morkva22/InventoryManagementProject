@@ -7,7 +7,7 @@ internal class Program
         try
         {
             var supa = new SupabaseRepository(
- 
+                
             await supa.InitDatabase();
 
             var result = await supa.SupabaseClient.From<ProductModel>().Get();
