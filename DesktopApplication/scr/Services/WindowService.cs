@@ -1,27 +1,40 @@
 using System.Windows;
 using ManagementSystem;
-using DesktopApplication.Views; // Важно!
+using DesktopApplication.Views;
 
 namespace DesktopApplication.Services
 {
     public class WindowService : IWindowService
     {
-        public bool ShowProductEditDialog(ProductModel product)
+        public ProductModel ShowProductEditDialog(ProductModel product)
         {
             var dialog = new ProductEditWindow(product);
-            return dialog.ShowDialog() == true;
+            if (dialog.ShowDialog() == true)
+            {
+                // Возвращаем отредактированный продукт
+                return dialog.Product;
+            }
+            return null; // Пользователь отменил редактирование
         }
 
-        public bool ShowCategoryEditDialog(CategoryModel category)
+        public CategoryModel ShowCategoryEditDialog(CategoryModel category)
         {
             var dialog = new CategoryEditWindow(category);
-            return dialog.ShowDialog() == true;
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.Category; // Предполагаем, что у CategoryEditWindow есть свойство Category
+            }
+            return null;
         }
 
-        public bool ShowSupplierEditDialog(SupplierModel supplier)
+        public SupplierModel ShowSupplierEditDialog(SupplierModel supplier)
         {
             var dialog = new SupplierEditWindow(supplier);
-            return dialog.ShowDialog() == true;
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.Supplier; // Предполагаем, что у SupplierEditWindow есть свойство Supplier
+            }
+            return null;
         }
 
         public bool ShowConfirmation(string message, string title = "Подтверждение")
@@ -39,8 +52,5 @@ namespace DesktopApplication.Services
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
-        
     }
-    
-    
 }

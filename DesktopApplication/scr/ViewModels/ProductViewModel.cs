@@ -61,16 +61,34 @@ namespace DesktopApplication.ViewModels
             {
                 Name = "Новый продукт",
                 Description = "",
-                PurchasePrice = 0,
-                SellingPrice = 0,
+                PurchasePrice = 1, // Минимальная цена вместо 0
+                SellingPrice = 1,  // Минимальная цена вместо 0
+                CategoryId = 1,    // Добавьте значение по умолчанию для CategoryId
+                SupplierId = 1,    // Добавьте значение по умолчанию для SupplierId
                 CreatedAt = DateTime.Now
             };
 
-            if (_windowService.ShowProductEditDialog(newProduct))
+            // Используем WindowService для получения отредактированного продукта
+            var editedProduct = _windowService.ShowProductEditDialog(newProduct);
+            
+            if (editedProduct != null)
             {
                 try
                 {
-                    await _repository.AddProduct(newProduct);
+                    // Дополнительная валидация перед сохранением
+                    if (editedProduct.PurchasePrice <= 0 || editedProduct.SellingPrice <= 0)
+                    {
+                        _windowService.ShowError("Цены должны быть больше 0");
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(editedProduct.Name))
+                    {
+                        _windowService.ShowError("Название продукта не может быть пустым");
+                        return;
+                    }
+
+                    await _repository.AddProduct(editedProduct);
                     await LoadProducts();
                     _windowService.ShowInfo("Продукт успешно добавлен!");
                 }
@@ -89,12 +107,30 @@ namespace DesktopApplication.ViewModels
                 return;
             }
 
-            var clone = SelectedProduct.Clone();
-            if (_windowService.ShowProductEditDialog(clone))
+            // Используем WindowService для получения отредактированного продукта
+            var editedProduct = _windowService.ShowProductEditDialog(SelectedProduct);
+            
+            if (editedProduct != null)
             {
                 try
                 {
-                    await _repository.UpdateProduct(clone);
+                    // Устанавливаем ID оригинального продукта для обновления
+                    editedProduct.Id = SelectedProduct.Id;
+                    
+                    // Дополнительная валидация
+                    if (editedProduct.PurchasePrice <= 0 || editedProduct.SellingPrice <= 0)
+                    {
+                        _windowService.ShowError("Цены должны быть больше 0");
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(editedProduct.Name))
+                    {
+                        _windowService.ShowError("Название продукта не может быть пустым");
+                        return;
+                    }
+
+                    await _repository.UpdateProduct(editedProduct);
                     await LoadProducts();
                     _windowService.ShowInfo("Продукт успешно обновлен!");
                 }

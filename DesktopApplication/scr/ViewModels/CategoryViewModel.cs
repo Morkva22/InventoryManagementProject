@@ -10,7 +10,7 @@ namespace DesktopApplication.ViewModels
 {
     public class CategoryViewModel
     {
-        private readonly SupabaseClientService _repository;
+        private readonly ISupabaseClientService  _repository;
 
         public ObservableCollection<CategoryModel> Categories { get; } = new();
         public CategoryModel SelectedCategory { get; set; }
@@ -20,7 +20,7 @@ namespace DesktopApplication.ViewModels
         public ICommand UpdateCategoryCommand { get; }
         public ICommand DeleteCategoryCommand { get; }
 
-        public CategoryViewModel(SupabaseClientService repository)
+        public CategoryViewModel(ISupabaseClientService  repository)
         {
             _repository = repository;
             

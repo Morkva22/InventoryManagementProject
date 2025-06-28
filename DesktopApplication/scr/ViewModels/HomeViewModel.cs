@@ -7,7 +7,7 @@ namespace DesktopApplication.ViewModels
 {
     public partial class HomeViewModel : ObservableObject
     {
-        private readonly SupabaseClientService _repository;
+        private readonly ISupabaseClientService _repository; // Используйте интерфейс
 
         [ObservableProperty]
         private int _totalProducts;
@@ -18,22 +18,30 @@ namespace DesktopApplication.ViewModels
         [ObservableProperty]
         private int _totalSuppliers;
 
-        public HomeViewModel(SupabaseClientService repository)
+        public HomeViewModel(ISupabaseClientService repository) // Измените на интерфейс
         {
             _repository = repository;
-            LoadDashboardData();
+            _ = LoadDashboardData(); // Async void избегаем
         }
 
         private async Task LoadDashboardData()
         {
-            var products = await _repository.GetAllProducts();
-            TotalProducts = products.Count();
+            try
+            {
+                var products = await _repository.GetAllProducts();
+                TotalProducts = products.Count();
 
-            var categories = await _repository.GetAllCategories();
-            TotalCategories = categories.Count();
+                var categories = await _repository.GetAllCategories();
+                TotalCategories = categories.Count();
 
-            var suppliers = await _repository.GetAllSuppliers();
-            TotalSuppliers = suppliers.Count();
+                var suppliers = await _repository.GetAllSuppliers();
+                TotalSuppliers = suppliers.Count();
+            }
+            catch (Exception ex)
+            {
+                // Логирование ошибки
+                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки данных: {ex.Message}");
+            }
         }
     }
 }
