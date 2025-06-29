@@ -49,6 +49,8 @@ namespace DesktopApplication
             return client;
         }
         
+        
+        
 
         private IServiceProvider ConfigureServices(Client client)
         {
