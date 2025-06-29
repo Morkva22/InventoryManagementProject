@@ -1,41 +1,46 @@
 using System.Windows;
 using ManagementSystem;
-using System.Globalization;
+using System.Collections.Generic;
+using System;
 
 namespace DesktopApplication.Views
 {
     public partial class ProductEditWindow : Window
     {
         public ProductModel Product { get; }
+        public List<CategoryModel> Categories { get; }
+        public List<SupplierModel> Suppliers { get; }
 
-        public ProductEditWindow(ProductModel product)
+        public ProductEditWindow(ProductModel product, List<CategoryModel> categories, List<SupplierModel> suppliers)
         {
             InitializeComponent();
             Product = product.Clone();
+            Categories = categories ?? new List<CategoryModel>();
+            Suppliers = suppliers ?? new List<SupplierModel>();
             DataContext = this;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация с использованием метода модели
+            // Validation using model method
             if (!Product.IsValid(out string errorMessage))
             {
-                MessageBox.Show(errorMessage, "Ошибка валидации", 
+                MessageBox.Show(errorMessage, "Validation Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Дополнительная проверка на случай, если пользователь ввел некорректные данные
+            // Additional validation in case user entered invalid data
             if (Product.PurchasePrice <= 0)
             {
-                MessageBox.Show("Цена закупки должна быть больше 0", "Ошибка", 
+                MessageBox.Show("Purchase price must be greater than 0", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (Product.SellingPrice <= 0)
             {
-                MessageBox.Show("Цена продажи должна быть больше 0", "Ошибка", 
+                MessageBox.Show("Selling price must be greater than 0", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }

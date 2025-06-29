@@ -1,6 +1,6 @@
-using DesktopApplication.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Controls;
+using System.Windows.Input;
+using DesktopApplication.ViewModels;
 
 namespace DesktopApplication.Views
 {
@@ -10,6 +10,14 @@ namespace DesktopApplication.Views
         {
             DataContext = viewModel;
             InitializeComponent();
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is ProductViewModel viewModel && viewModel.EditProductCommand.CanExecute(null))
+            {
+                viewModel.EditProductCommand.Execute(null);
+            }
         }
     }
 }

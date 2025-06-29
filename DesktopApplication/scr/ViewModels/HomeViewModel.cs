@@ -40,7 +40,7 @@ namespace DesktopApplication.ViewModels
             catch (Exception ex)
             {
                 // Логирование ошибки
-                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки данных: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error downloading data: {ex.Message}");
             }
         }
     }

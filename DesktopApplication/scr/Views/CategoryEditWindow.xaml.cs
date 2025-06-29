@@ -16,6 +16,13 @@ namespace DesktopApplication.Views
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            if (!Category.IsValid(out string errorMessage))
+            {
+                MessageBox.Show(errorMessage, "Validation Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             DialogResult = true;
             Close();
         }

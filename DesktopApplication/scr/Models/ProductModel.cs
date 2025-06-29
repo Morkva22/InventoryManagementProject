@@ -6,26 +6,25 @@ namespace ManagementSystem
     [Table("products")]
     public class ProductModel : BaseModel
     {
-        [PrimaryKey("productid", true)]
+        [PrimaryKey("productid", false)] // false означает, что ключ НЕ должен включаться в INSERT
         public int Id { get; set; }
 
         [Column("name")]
-        public string Name { get; set; } = "Новый продукт";
-
+        public string Name { get; set; } = "New product";
         [Column("description")]
         public string Description { get; set; } = "";
 
         [Column("categoryid")]
-        public int CategoryId { get; set; } = 1; // Значение по умолчанию
+        public int CategoryId { get; set; } = 1;
 
         [Column("supplierid")]
-        public int SupplierId { get; set; } = 1; // Значение по умолчанию
+        public int SupplierId { get; set; } = 1;
 
         [Column("purchaseprice")]
-        public decimal PurchasePrice { get; set; } = 1; // Минимальная цена по умолчанию
+        public decimal PurchasePrice { get; set; } = 1;
 
         [Column("sellingprice")]
-        public decimal SellingPrice { get; set; } = 1; // Минимальная цена по умолчанию
+        public decimal SellingPrice { get; set; } = 1;
 
         [Column("createddate")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -37,32 +36,27 @@ namespace ManagementSystem
 
             if (string.IsNullOrWhiteSpace(Name))
             {
-                errorMessage = "Название продукта не может быть пустым";
-                return false;
+                errorMessage = "The product name cannot be empty";                return false;
             }
 
             if (PurchasePrice <= 0)
             {
-                errorMessage = "Цена закупки должна быть больше 0";
-                return false;
+                errorMessage = "The purchase price must be greater than 0";                return false;
             }
 
             if (SellingPrice <= 0)
             {
-                errorMessage = "Цена продажи должна быть больше 0";
-                return false;
+                errorMessage = "The selling price must be greater than 0";                return false;
             }
 
             if (CategoryId <= 0)
             {
-                errorMessage = "Необходимо выбрать категорию";
-                return false;
+                errorMessage = "A category must be selected";                return false;
             }
 
             if (SupplierId <= 0)
             {
-                errorMessage = "Необходимо выбрать поставщика";
-                return false;
+                errorMessage = "A supplier must be selected";                return false;
             }
 
             return true;

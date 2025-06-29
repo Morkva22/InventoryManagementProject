@@ -1,4 +1,12 @@
 namespace DesktopApplication.Messages
 {
-    public sealed record NavigationMessage(string ViewName);
+    public class NavigationMessage
+    {
+        public string ViewName { get; }
+
+        public NavigationMessage(string viewName)
+        {
+            ViewName = viewName;
+        }
+    }
 }

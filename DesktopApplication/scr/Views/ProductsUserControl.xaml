@@ -4,50 +4,163 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="800">
-    <Grid Margin="10">
+             d:DesignHeight="600" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <!-- Button styles remain unchanged -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#2196F3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1976D2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+            <Setter Property="Background" Value="#FF9800"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F57C00"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+            <Setter Property="Background" Value="#F44336"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#D32F2F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#388E3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Text="Управление продуктами" FontSize="20" FontWeight="Bold"/>
+        <!-- Header -->
+        <TextBlock Grid.Row="0" 
+                   Text="Products Management" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Margin="10"
+                   HorizontalAlignment="Left"/>
+
+        <!-- Control Panel -->
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal" 
+                    Margin="10,5">
             
-            <Button Content="Обновить" Command="{Binding LoadProductsCommand}" 
-                    Margin="20,0,0,0" Width="100" Style="{StaticResource PrimaryButton}"/>
+            <Button Content="Add" 
+                    Style="{StaticResource SuccessButton}"
+                    Command="{Binding AddProductCommand}"/>
+            
+            <Button Content="Edit" 
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding EditProductCommand}"/>
+            
+            <Button Content="Delete" 
+                    Style="{StaticResource DangerButton}"
+                    Command="{Binding DeleteProductCommand}"/>
+            
+            <Button Content="Refresh" 
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding LoadProductsCommand}"/>
+
+            <!-- Search -->
+            <TextBlock Text="Search:" 
+                       VerticalAlignment="Center" 
+                       Margin="20,0,5,0"/>
+            
+            <TextBox Width="200" 
+                     Height="25"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalAlignment="Center"/>
         </StackPanel>
 
-        <!-- Таблица продуктов -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Products}" 
-                 SelectedItem="{Binding SelectedProduct}"
-                 AutoGenerateColumns="False"
-                 Margin="0,10">
+        <!-- Products Table -->
+        <DataGrid Grid.Row="2" 
+                  ItemsSource="{Binding FilteredProducts}"
+                  SelectedItem="{Binding SelectedProduct}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  Margin="10">
+            
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="50"/>
-                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="150"/>
-                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="200"/>
-                <DataGridTextColumn Header="Закупочная цена" 
-                                  Binding="{Binding PurchasePrice, StringFormat=C2}" Width="100"/>
-                <DataGridTextColumn Header="Продажная цена" 
-                                  Binding="{Binding SellingPrice, StringFormat=C2}" Width="100"/>
-                <DataGridTextColumn Header="Дата создания" 
-                                  Binding="{Binding created_at, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <DataGridTextColumn Header="ID" 
+                                    Binding="{Binding Id}" 
+                                    Width="50"/>
+                
+                <DataGridTextColumn Header="Name" 
+                                    Binding="{Binding Name}" 
+                                    Width="150"/>
+                
+                <DataGridTextColumn Header="Description" 
+                                    Binding="{Binding Description}" 
+                                    Width="200"/>
+                
+                <DataGridTextColumn Header="Purchase Price" 
+                                    Binding="{Binding PurchasePrice, StringFormat=F2}" 
+                                    Width="120"/>
+                
+                <DataGridTextColumn Header="Selling Price" 
+                                    Binding="{Binding SellingPrice, StringFormat=F2}" 
+                                    Width="120"/>
+                
+                <DataGridTextColumn Header="Created Date" 
+                                    Binding="{Binding CreatedAt, StringFormat=dd.MM.yyyy}" 
+                                    Width="120"/>
             </DataGrid.Columns>
-        </DataGrid>
 
-        <!-- Панель действий -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
-            <Button Content="Добавить" Command="{Binding AddProductCommand}" 
-                    Width="120" Style="{StaticResource SuccessButton}"/>
-            
-            <Button Content="Редактировать" Command="{Binding EditProductCommand}" 
-                    Width="120" Margin="10,0" Style="{StaticResource PrimaryButton}"/>
-            
-            <Button Content="Удалить" Command="{Binding DeleteProductCommand}" 
-                    Width="120" Style="{StaticResource DangerButton}"/>
-        </StackPanel>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#E3F2FD"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#BBDEFB"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
     </Grid>
 </UserControl>

@@ -10,8 +10,8 @@ namespace DesktopApplication.Services
         
         CategoryModel ShowCategoryEditDialog(CategoryModel category);
         SupplierModel ShowSupplierEditDialog(SupplierModel supplier);
-        bool ShowConfirmation(string message, string title = "Подтверждение");
-        void ShowError(string message, string title = "Ошибка");
-        void ShowInfo(string message, string title = "Информация");
+        bool ShowConfirmation(string message, string title = "Confirmation");
+        void ShowError(string message, string title = "Error");
+        void ShowInfo(string message, string title = "Information");
     }
 }

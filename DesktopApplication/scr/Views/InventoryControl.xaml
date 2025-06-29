@@ -14,8 +14,8 @@
 
         <Border Grid.Row="0" Style="{StaticResource SectionHeaderStyle}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Управление инвентаризацией" FontSize="18" FontWeight="Bold"/>
-                <Button Content="Обновить" Command="{Binding LoadInventoryCommand}" Width="100" Margin="20,0,0,0"/>
+                <TextBlock Text="Inventory Management" FontSize="18" FontWeight="Bold"/>
+                <Button Content="Refresh" Command="{Binding LoadInventoryCommand}" Width="100" Margin="20,0,0,0"/>
             </StackPanel>
         </Border>
 
@@ -23,16 +23,16 @@
                   AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                <DataGridTextColumn Header="ID товара" Binding="{Binding ProductId}" Width="Auto"/>
-                <DataGridTextColumn Header="Количество" Binding="{Binding Quantity}" Width="Auto"/>
-                <DataGridTextColumn Header="Мин. запас" Binding="{Binding MinStock}" Width="Auto"/>
-                <DataGridTextColumn Header="Обновлено" Binding="{Binding LastUpdated, StringFormat=dd.MM.yyyy HH:mm}" Width="Auto"/>
+                <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="Auto"/>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="Auto"/>
+                <DataGridTextColumn Header="Min Stock" Binding="{Binding MinStock}" Width="Auto"/>
+                <DataGridTextColumn Header="Updated" Binding="{Binding LastUpdated, StringFormat=dd.MM.yyyy HH:mm}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
 
         <Border Grid.Row="2" Style="{StaticResource SectionHeaderStyle}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Сохранить" Command="{Binding UpdateInventoryCommand}" Width="120"/>
+                <Button Content="Save" Command="{Binding UpdateInventoryCommand}" Width="120"/>
             </StackPanel>
         </Border>
     </Grid>

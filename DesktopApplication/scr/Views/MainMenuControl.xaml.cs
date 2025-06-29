@@ -1,65 +1,73 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using DesktopApplication.Services;
-using CommunityToolkit.Mvvm.Messaging;
-using DesktopApplication.Messages;
 
 namespace DesktopApplication.Views
 {
     public partial class MainMenuControl : UserControl
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly INavigationService _navigationService;
-        private Button _currentActiveButton;
 
-        public MainMenuControl(INavigationService navigationService)
+        public MainMenuControl(IServiceProvider serviceProvider)
         {
-            _navigationService = navigationService;
+            _serviceProvider = serviceProvider;
+            _navigationService = serviceProvider.GetRequiredService<INavigationService>();
             InitializeComponent();
-            
-            // Подписываемся на сообщения
-            WeakReferenceMessenger.Default.Register<NavigationMessage>(this, (r, m) => 
+        }
+
+        private void btnProducts_Click(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                if (m.ViewName == "Products") UpdateActiveButton(BtnProducts);
-                else if (m.ViewName == "Categories") UpdateActiveButton(BtnCategories);
-                else if (m.ViewName == "Suppliers") UpdateActiveButton(BtnSuppliers);
-                else if (m.ViewName == "Home") UpdateActiveButton(BtnReports);
-            });
-
-            Loaded += OnLoaded;
+                _navigationService.NavigateTo("Products");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Navigation error: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void btnCategories_Click(object sender, RoutedEventArgs e)
         {
-            Loaded -= OnLoaded;
-            _navigationService.NavigateTo("Products");
+            try
+            {
+                _navigationService.NavigateTo("Categories");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Navigation error: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void NavigateToView(string viewName, Button activeButton)
+        private void btnSuppliers_Click(object sender, RoutedEventArgs e)
         {
-            _navigationService.NavigateTo(viewName);
-            UpdateActiveButton(activeButton);
-            WeakReferenceMessenger.Default.Send(new NavigationMessage(viewName));
+            try
+            {
+                _navigationService.NavigateTo("Suppliers");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Navigation error: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void btnProducts_Click(object sender, RoutedEventArgs e) 
-            => NavigateToView("Products", BtnProducts);
-
-        private void btnCategories_Click(object sender, RoutedEventArgs e) 
-            => NavigateToView("Categories", BtnCategories);
-
-        private void btnSuppliers_Click(object sender, RoutedEventArgs e) 
-            => NavigateToView("Suppliers", BtnSuppliers);
-
-        private void btnReports_Click(object sender, RoutedEventArgs e) 
-            => NavigateToView("Home", BtnReports);
-
-        private void UpdateActiveButton(Button activeButton)
+        private void btnReports_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentActiveButton != null)
-                _currentActiveButton.Style = (Style)FindResource("PrimaryButton");
-            
-            activeButton.Style = (Style)FindResource("ActiveButtonStyle");
-            _currentActiveButton = activeButton;
+            try
+            {
+                _navigationService.NavigateTo("Home");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Navigation error: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

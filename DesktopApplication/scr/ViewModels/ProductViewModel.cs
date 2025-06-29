@@ -3,39 +3,53 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ManagementSystem;
 using DesktopApplication.Services;
+using DesktopApplication.Views;
 
 namespace DesktopApplication.ViewModels
 {
     public partial class ProductViewModel : ObservableObject
     {
         private readonly ISupabaseClientService _repository;
-        private readonly IWindowService _windowService;
 
         [ObservableProperty]
-        private ProductModel _selectedProduct;
+        private ProductModel? selectedProduct;
+
+        [ObservableProperty]
+        private string searchText = "";
 
         public ObservableCollection<ProductModel> Products { get; } = new();
+        public ObservableCollection<ProductModel> FilteredProducts { get; } = new();
 
         public ICommand LoadProductsCommand { get; }
         public ICommand AddProductCommand { get; }
         public ICommand EditProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
+        public ICommand SearchCommand { get; }
 
-        public ProductViewModel(ISupabaseClientService repository, IWindowService windowService)
+        public ProductViewModel(ISupabaseClientService repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
             
             LoadProductsCommand = new AsyncRelayCommand(LoadProducts);
             AddProductCommand = new AsyncRelayCommand(AddProduct);
-            EditProductCommand = new AsyncRelayCommand(EditProduct);
-            DeleteProductCommand = new AsyncRelayCommand(DeleteProduct);
-            
-            LoadProducts();
+            EditProductCommand = new AsyncRelayCommand(EditProduct, () => SelectedProduct != null);
+            DeleteProductCommand = new AsyncRelayCommand(DeleteProduct, () => SelectedProduct != null);
+            SearchCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ApplyFilter);
+
+            // Subscribe to search text changes
+            PropertyChanged += (s, e) => 
+            {
+                if (e.PropertyName == nameof(SearchText))
+                    ApplyFilter();
+            };
+
+            // Load products on initialization
+            _ = LoadProducts();
         }
 
         private async Task LoadProducts()
@@ -48,120 +62,135 @@ namespace DesktopApplication.ViewModels
                 {
                     Products.Add(product);
                 }
+                ApplyFilter();
             }
             catch (Exception ex)
             {
-                _windowService.ShowError($"Ошибка загрузки продуктов: {ex.Message}");
+                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async Task AddProduct()
         {
-            var newProduct = new ProductModel
+            try
             {
-                Name = "Новый продукт",
-                Description = "",
-                PurchasePrice = 1, // Минимальная цена вместо 0
-                SellingPrice = 1,  // Минимальная цена вместо 0
-                CategoryId = 1,    // Добавьте значение по умолчанию для CategoryId
-                SupplierId = 1,    // Добавьте значение по умолчанию для SupplierId
-                CreatedAt = DateTime.Now
-            };
+                var newProduct = new ProductModel
+                {
+                    Name = "New Product",
+                    Description = "",
+                    PurchasePrice = 1,
+                    SellingPrice = 1,
+                    CategoryId = 1,
+                    SupplierId = 1,
+                    CreatedAt = DateTime.Now
+                };
 
-            // Используем WindowService для получения отредактированного продукта
-            var editedProduct = _windowService.ShowProductEditDialog(newProduct);
-            
-            if (editedProduct != null)
+                // Get lists of categories and suppliers
+                var categories = await _repository.GetAllCategories();
+                var suppliers = await _repository.GetAllSuppliers();
+                
+                var editWindow = new ProductEditWindow(newProduct, categories.ToList(), suppliers.ToList());
+
+                if (editWindow.ShowDialog() == true)
+                {
+                    if (editWindow.Product.IsValid(out string errorMessage))
+                    {
+                        editWindow.Product.Id = 0; // Reset ID for new product
+                        await _repository.AddProduct(editWindow.Product);
+                        await LoadProducts();
+                        MessageBox.Show("Product successfully added!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(errorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    // Дополнительная валидация перед сохранением
-                    if (editedProduct.PurchasePrice <= 0 || editedProduct.SellingPrice <= 0)
-                    {
-                        _windowService.ShowError("Цены должны быть больше 0");
-                        return;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(editedProduct.Name))
-                    {
-                        _windowService.ShowError("Название продукта не может быть пустым");
-                        return;
-                    }
-
-                    await _repository.AddProduct(editedProduct);
-                    await LoadProducts();
-                    _windowService.ShowInfo("Продукт успешно добавлен!");
-                }
-                catch (Exception ex)
-                {
-                    _windowService.ShowError($"Ошибка добавления: {ex.Message}");
-                }
+                MessageBox.Show($"Error adding product: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async Task EditProduct()
         {
-            if (SelectedProduct == null)
+            if (SelectedProduct == null) return;
+
+            try
             {
-                _windowService.ShowError("Выберите продукт для редактирования");
-                return;
+                // Get lists of categories and suppliers
+                var categories = await _repository.GetAllCategories();
+                var suppliers = await _repository.GetAllSuppliers();
+                
+                var editWindow = new ProductEditWindow(SelectedProduct, categories.ToList(), suppliers.ToList());
+
+                if (editWindow.ShowDialog() == true)
+                {
+                    if (editWindow.Product.IsValid(out string errorMessage))
+                    {
+                        editWindow.Product.Id = SelectedProduct.Id; // Preserve original ID
+                        await _repository.UpdateProduct(editWindow.Product);
+                        await LoadProducts();
+                        MessageBox.Show("Product successfully updated!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(errorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
             }
-
-            // Используем WindowService для получения отредактированного продукта
-            var editedProduct = _windowService.ShowProductEditDialog(SelectedProduct);
-            
-            if (editedProduct != null)
+            catch (Exception ex)
             {
-                try
-                {
-                    // Устанавливаем ID оригинального продукта для обновления
-                    editedProduct.Id = SelectedProduct.Id;
-                    
-                    // Дополнительная валидация
-                    if (editedProduct.PurchasePrice <= 0 || editedProduct.SellingPrice <= 0)
-                    {
-                        _windowService.ShowError("Цены должны быть больше 0");
-                        return;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(editedProduct.Name))
-                    {
-                        _windowService.ShowError("Название продукта не может быть пустым");
-                        return;
-                    }
-
-                    await _repository.UpdateProduct(editedProduct);
-                    await LoadProducts();
-                    _windowService.ShowInfo("Продукт успешно обновлен!");
-                }
-                catch (Exception ex)
-                {
-                    _windowService.ShowError($"Ошибка обновления: {ex.Message}");
-                }
+                MessageBox.Show($"Error updating product: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async Task DeleteProduct()
         {
-            if (SelectedProduct == null)
-            {
-                _windowService.ShowError("Выберите продукт для удаления");
-                return;
-            }
+            if (SelectedProduct == null) return;
 
-            if (_windowService.ShowConfirmation("Удалить выбранный продукт?"))
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete product '{SelectedProduct.Name}'?",
+                "Confirm Deletion",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
             {
                 try
                 {
                     await _repository.DeleteProduct(SelectedProduct.Id);
                     await LoadProducts();
-                    _windowService.ShowInfo("Продукт удален!");
+                    SelectedProduct = null;
+                    MessageBox.Show("Product successfully deleted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    _windowService.ShowError($"Ошибка удаления: {ex.Message}");
+                    MessageBox.Show($"Error deleting product: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void ApplyFilter()
+        {
+            FilteredProducts.Clear();
+            
+            var filtered = string.IsNullOrWhiteSpace(SearchText) 
+                ? Products 
+                : Products.Where(p => 
+                    p.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                    (!string.IsNullOrEmpty(p.Description) && p.Description.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
+
+            foreach (var product in filtered)
+            {
+                FilteredProducts.Add(product);
+            }
+        }
+
+        partial void OnSelectedProductChanged(ProductModel? value)
+        {
+            ((AsyncRelayCommand)EditProductCommand).NotifyCanExecuteChanged();
+            ((AsyncRelayCommand)DeleteProductCommand).NotifyCanExecuteChanged();
         }
     }
 }

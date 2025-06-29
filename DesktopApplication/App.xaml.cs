@@ -36,13 +36,13 @@ namespace DesktopApplication
 
         private async Task<Client> InitializeSupabase()
         {
-           
             var options = new SupabaseOptions
             {
                 AutoConnectRealtime = true,
                 AutoRefreshToken = true
             };
-
+            const string url = "your supabase-url"; // Replace with your Supabase URL
+            const string key = "your supabase-key"; // Replace with your Supabase Key
             var client = new Client(url, key, options);
             await client.InitializeAsync();
 
@@ -53,17 +53,16 @@ namespace DesktopApplication
         {
             var services = new ServiceCollection();
 
-            // Регистрация Supabase клиента
+            // Register Supabase client
             services.AddSingleton(client);
             
-            // Регистрация сервисов
+            // Register services
             services.AddSingleton<ISupabaseClientService, SupabaseClientService>();
-            services.AddSingleton<SupabaseClientService>(); // Для обратной совместимости
+            services.AddSingleton<SupabaseClientService>(); // For backward compatibility
             services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
 
-            // ViewModels
+            // ViewModels - removing IWindowService dependency for ProductViewModel
             services.AddTransient<ProductViewModel>();
             services.AddTransient<CategoryViewModel>();
             services.AddTransient<SupplierViewModel>();
@@ -76,7 +75,7 @@ namespace DesktopApplication
             services.AddTransient<SuppliersControl>();
             services.AddTransient<HomeUserControl>();
 
-            // Главное окно
+            // Main window
             services.AddSingleton<MainWindow>();
 
             return services.BuildServiceProvider();
@@ -94,15 +93,15 @@ namespace DesktopApplication
 
         private void HandleStartupError(Exception ex)
         {
-            var errorMessage = $"Ошибка запуска: {ex.Message}";
+            var errorMessage = $"Startup error: {ex.Message}";
             
             if (ex.InnerException != null)
             {
-                errorMessage += $"\nВнутренняя ошибка: {ex.InnerException.Message}";
+                errorMessage += $"\nInner error: {ex.InnerException.Message}";
             }
 
-            // Логирование в консоль для отладки
-            System.Diagnostics.Debug.WriteLine($"Полная ошибка запуска:");
+            // Console logging for debugging
+            System.Diagnostics.Debug.WriteLine($"Full startup error:");
             System.Diagnostics.Debug.WriteLine($"Message: {ex.Message}");
             System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
             
@@ -111,9 +110,9 @@ namespace DesktopApplication
                 System.Diagnostics.Debug.WriteLine($"InnerException: {ex.InnerException}");
             }
 
-            Console.WriteLine($"Ошибка запуска: {ex}");
+            Console.WriteLine($"Startup error: {ex}");
             
-            MessageBox.Show(errorMessage, "Ошибка запуска приложения", 
+            MessageBox.Show(errorMessage, "Application startup error", 
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -125,7 +124,7 @@ namespace DesktopApplication
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка при закрытии: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Exit error: {ex.Message}");
             }
             finally
             {

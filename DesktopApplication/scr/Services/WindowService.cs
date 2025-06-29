@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using ManagementSystem;
 using DesktopApplication.Views;
@@ -8,49 +10,59 @@ namespace DesktopApplication.Services
     {
         public ProductModel ShowProductEditDialog(ProductModel product)
         {
-            var dialog = new ProductEditWindow(product);
-            if (dialog.ShowDialog() == true)
+            var categories = new List<CategoryModel>(); // Replace with actual data retrieval
+            var suppliers = new List<SupplierModel>(); // Replace with actual data retrieval
+            var editWindow = new ProductEditWindow(product, categories, suppliers);
+            
+            if (editWindow.ShowDialog() == true)
             {
-                // Возвращаем отредактированный продукт
-                return dialog.Product;
+                return editWindow.Product;
             }
-            return null; // Пользователь отменил редактирование
+            
+            return null;
         }
 
         public CategoryModel ShowCategoryEditDialog(CategoryModel category)
         {
-            var dialog = new CategoryEditWindow(category);
-            if (dialog.ShowDialog() == true)
+            var editWindow = new CategoryEditWindow(category);
+            
+            if (editWindow.ShowDialog() == true)
             {
-                return dialog.Category; // Предполагаем, что у CategoryEditWindow есть свойство Category
+                return editWindow.Category;
             }
+            
             return null;
         }
 
         public SupplierModel ShowSupplierEditDialog(SupplierModel supplier)
         {
-            var dialog = new SupplierEditWindow(supplier);
-            if (dialog.ShowDialog() == true)
+            var editWindow = new SupplierEditWindow(supplier);
+            
+            if (editWindow.ShowDialog() == true)
             {
-                return dialog.Supplier; // Предполагаем, что у SupplierEditWindow есть свойство Supplier
+                return editWindow.Supplier;
             }
+            
             return null;
         }
 
-        public bool ShowConfirmation(string message, string title = "Подтверждение")
+        public bool ShowConfirmation(string message, string title = "Confirmation")
         {
-            return MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question) 
-                   == MessageBoxResult.Yes;
+            var result = MessageBox.Show(message, title, 
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
         }
 
-        public void ShowError(string message, string title = "Ошибка")
+        public void ShowError(string message, string title = "Error")
         {
-            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(message, title, 
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void ShowInfo(string message, string title = "Информация")
+        public void ShowInfo(string message, string title = "Information")
         {
-            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(message, title, 
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
