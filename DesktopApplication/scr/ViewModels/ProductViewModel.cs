@@ -40,15 +40,13 @@ namespace DesktopApplication.ViewModels
             EditProductCommand = new AsyncRelayCommand(EditProduct, () => SelectedProduct != null);
             DeleteProductCommand = new AsyncRelayCommand(DeleteProduct, () => SelectedProduct != null);
             SearchCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ApplyFilter);
-
-            // Subscribe to search text changes
+            
             PropertyChanged += (s, e) => 
             {
                 if (e.PropertyName == nameof(SearchText))
                     ApplyFilter();
             };
-
-            // Load products on initialization
+            
             _ = LoadProducts();
         }
 
@@ -84,8 +82,7 @@ namespace DesktopApplication.ViewModels
                     SupplierId = 1,
                     CreatedAt = DateTime.Now
                 };
-
-                // Get lists of categories and suppliers
+                
                 var categories = await _repository.GetAllCategories();
                 var suppliers = await _repository.GetAllSuppliers();
                 
@@ -118,7 +115,6 @@ namespace DesktopApplication.ViewModels
 
             try
             {
-                // Get lists of categories and suppliers
                 var categories = await _repository.GetAllCategories();
                 var suppliers = await _repository.GetAllSuppliers();
                 

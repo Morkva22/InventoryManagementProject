@@ -40,8 +40,7 @@ namespace DesktopApplication.ViewModels
             EditSupplierCommand = new AsyncRelayCommand(EditSupplier, () => SelectedSupplier != null);
             DeleteSupplierCommand = new AsyncRelayCommand(DeleteSupplier, () => SelectedSupplier != null);
             SearchCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ApplyFilter);
-
-            // Subscribe to search text changes
+            
             PropertyChanged += (s, e) => 
             {
                 if (e.PropertyName == nameof(SearchText))

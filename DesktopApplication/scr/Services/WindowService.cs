@@ -10,8 +10,8 @@ namespace DesktopApplication.Services
     {
         public ProductModel ShowProductEditDialog(ProductModel product)
         {
-            var categories = new List<CategoryModel>(); // Replace with actual data retrieval
-            var suppliers = new List<SupplierModel>(); // Replace with actual data retrieval
+            var categories = new List<CategoryModel>(); 
+            var suppliers = new List<SupplierModel>(); 
             var editWindow = new ProductEditWindow(product, categories, suppliers);
             
             if (editWindow.ShowDialog() == true)

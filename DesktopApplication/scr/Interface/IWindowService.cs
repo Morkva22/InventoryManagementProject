@@ -5,7 +5,6 @@ namespace DesktopApplication.Services
 {
     public interface IWindowService
     {
-        // Изменяем метод - теперь он возвращает отредактированный продукт или null
         ProductModel ShowProductEditDialog(ProductModel product);
         
         CategoryModel ShowCategoryEditDialog(CategoryModel category);

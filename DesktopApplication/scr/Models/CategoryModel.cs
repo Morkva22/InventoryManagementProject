@@ -6,13 +6,12 @@ namespace ManagementSystem
     [Table("categories")]
     public class CategoryModel : BaseModel
     {
-        [PrimaryKey("id", false)] // false означает, что ключ НЕ должен включаться в INSERT
+        [PrimaryKey("id", false)] 
         public int Id { get; set; }
 
         [Column("name")]
         public string Name { get; set; } = "Новая категория";
-
-        // Метод валидации
+        
         public bool IsValid(out string errorMessage)
         {
             errorMessage = "";

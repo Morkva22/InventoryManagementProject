@@ -15,8 +15,7 @@ namespace DesktopApplication.Services
         {
             _supabase = supabase;
         }
-
-        #region Products
+        
         public async Task<IEnumerable<ProductModel>> GetAllProducts()
         {
             var response = await _supabase
@@ -53,9 +52,7 @@ namespace DesktopApplication.Services
                 .Where(x => x.Id == id)
                 .Delete();
         }
-        #endregion
-
-        #region Categories
+        
         public async Task<IEnumerable<CategoryModel>> GetAllCategories()
         {
             var response = await _supabase
@@ -87,9 +84,7 @@ namespace DesktopApplication.Services
                 .Where(x => x.Id == id)
                 .Delete();
         }
-        #endregion
-
-        #region Suppliers
+        
         public async Task<IEnumerable<SupplierModel>> GetAllSuppliers()
         {
             var response = await _supabase
@@ -124,9 +119,7 @@ namespace DesktopApplication.Services
                 .Where(x => x.Id == id)
                 .Delete();
         }
-        #endregion
-
-        #region Inventory
+        
         public async Task<IEnumerable<InventoryModel>> GetAllInventory()
         {
             var response = await _supabase
@@ -145,6 +138,6 @@ namespace DesktopApplication.Services
                 .Set(x => x.MinStock, inventory.MinStock)
                 .Update();
         }
-        #endregion
+    
     }
 }

@@ -7,7 +7,7 @@ namespace DesktopApplication.ViewModels
 {
     public partial class HomeViewModel : ObservableObject
     {
-        private readonly ISupabaseClientService _repository; // Используйте интерфейс
+        private readonly ISupabaseClientService _repository; 
 
         [ObservableProperty]
         private int _totalProducts;
@@ -18,10 +18,10 @@ namespace DesktopApplication.ViewModels
         [ObservableProperty]
         private int _totalSuppliers;
 
-        public HomeViewModel(ISupabaseClientService repository) // Измените на интерфейс
+        public HomeViewModel(ISupabaseClientService repository) 
         {
             _repository = repository;
-            _ = LoadDashboardData(); // Async void избегаем
+            _ = LoadDashboardData(); 
         }
 
         private async Task LoadDashboardData()
@@ -39,7 +39,6 @@ namespace DesktopApplication.ViewModels
             }
             catch (Exception ex)
             {
-                // Логирование ошибки
                 System.Diagnostics.Debug.WriteLine($"Error downloading data: {ex.Message}");
             }
         }

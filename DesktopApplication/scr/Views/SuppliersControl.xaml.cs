@@ -10,7 +10,6 @@ namespace DesktopApplication.Views
             DataContext = viewModel;
             InitializeComponent();
             
-            // Загружаем данные при инициализации
             Loaded += async (s, e) =>
             {
                 if (viewModel.LoadSuppliersCommand.CanExecute(null))

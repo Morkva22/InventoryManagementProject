@@ -6,7 +6,7 @@ namespace ManagementSystem
     [Table("products")]
     public class ProductModel : BaseModel
     {
-        [PrimaryKey("productid", false)] // false означает, что ключ НЕ должен включаться в INSERT
+        [PrimaryKey("productid", false)]
         public int Id { get; set; }
 
         [Column("name")]
@@ -28,8 +28,7 @@ namespace ManagementSystem
 
         [Column("createddate")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        // Метод валидации
+        
         public bool IsValid(out string errorMessage)
         {
             errorMessage = "";
